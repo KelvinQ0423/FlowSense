@@ -45,15 +45,10 @@ from pathlib import Path
 import numpy as np
 
 from research.compare_historical_features import (
-
-    DatasetArrays,
-
-    build_dataset,
-
-    fit_ridge,
-
-    predict_ridge,
-
+    DatasetArrays,
+    build_dataset,
+    fit_ridge,
+    predict_ridge,
 )
 
 from research.evaluate_conditional_local_history import (
