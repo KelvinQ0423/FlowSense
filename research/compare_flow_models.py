@@ -46,8 +46,6 @@ import numpy as np
 
 from research.compare_historical_features import (
 
-    DEFAULT_INPUTS,
-
     DatasetArrays,
 
     build_dataset,
@@ -66,6 +64,10 @@ from research.evaluate_conditional_local_history import (
 
     build_local_dataset,
 
+)
+
+DEFAULT_INPUTS = sorted(
+    Path("tracking_data").glob("member2_canonical_tracks*.csv")
 )
 
 
