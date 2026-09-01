@@ -52,19 +52,14 @@ from research.compare_historical_features import (
 )
 
 from research.evaluate_conditional_local_history import (
-
-    LocalHistoryDataset,
-
-    apply_local_residuals,
-
-    build_local_dataset,
-
+    LocalHistoryDataset,
+    apply_local_residuals,
+    build_local_dataset,
 )
 
 DEFAULT_INPUTS = sorted(
     Path("tracking_data").glob("member2_canonical_tracks*.csv")
 )
-
 
 DEFAULT_HORIZONS = (5, 10, 15, 30)
 
