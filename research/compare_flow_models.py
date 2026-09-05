@@ -1093,6 +1093,48 @@ def main() -> None:
 
     rows = add_overall_rows(rows)
 
+        print()
+    print("Pooled horizon results:")
+    print()
+    print(f"{'Horizon':<12}{'Current Ridge':>18}{'Historical Motion':>22}")
+    print("-" * 52)
+
+    for horizon in horizons:
+        ridge_row = next(
+            row for row in rows
+            if row["split"] == "ALL_VIDEOS"
+            and row["scope"] == "horizon"
+            and row["model"] == "current_ridge"
+            and int(row["horizon_frames"]) == horizon
+        )
+
+        history_row = next(
+            row for row in rows
+            if row["split"] == "ALL_VIDEOS"
+            and row["scope"] == "horizon"
+            and row["model"] == "historical_motion"
+            and int(row["horizon_frames"]) == horizon
+        )
+
+        ridge_error = float(ridge_row["mean_error_px"])
+        history_error = float(history_row["mean_error_px"])
+
+        improvement = percentage_improvement(
+            ridge_error,
+            history_error,
+        )
+
+        print(
+            f"{horizon:<12}"
+            f"{ridge_error:>18.4f}"
+            f"{history_error:>22.4f}"
+        )
+
+        print(
+            f"    Historical Motion vs Current Ridge: "
+            f"{improvement:+.2f}%"
+        )
+
     write_results(
 
         args.output,
