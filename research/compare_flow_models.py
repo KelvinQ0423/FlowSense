@@ -1093,47 +1093,42 @@ def main() -> None:
 
     rows = add_overall_rows(rows)
 
-        print()
-    print("Pooled horizon results:")
     print()
-    print(f"{'Horizon':<12}{'Current Ridge':>18}{'Historical Motion':>22}")
-    print("-" * 52)
+    print("Pooled horizon results...")
+
+    horizon_rows = [
+        row
+        for row in rows
+        if row["scope"] == "horizon"
+    ]
 
     for horizon in horizons:
-        ridge_row = next(
-            row for row in rows
-            if row["split"] == "ALL_VIDEOS"
-            and row["scope"] == "horizon"
+        ridge_values = [
+            row["mean_error_px"]
+            for row in horizon_rows
+            if row["horizon_frames"] == horizon
             and row["model"] == "current_ridge"
-            and int(row["horizon_frames"]) == horizon
-        )
+        ]
 
-        history_row = next(
-            row for row in rows
-            if row["split"] == "ALL_VIDEOS"
-            and row["scope"] == "horizon"
+        history_values = [
+            row["mean_error_px"]
+            for row in horizon_rows
+            if row["horizon_frames"] == horizon
             and row["model"] == "historical_motion"
-            and int(row["horizon_frames"]) == horizon
-        )
+        ]
 
-        ridge_error = float(ridge_row["mean_error_px"])
-        history_error = float(history_row["mean_error_px"])
+        ridge_ade = float(np.mean(ridge_values))
+        history_ade = float(np.mean(history_values))
 
         improvement = percentage_improvement(
-            ridge_error,
-            history_error,
+            ridge_ade,
+            history_ade,
         )
 
-        print(
-            f"{horizon:<12}"
-            f"{ridge_error:>18.4f}"
-            f"{history_error:>22.4f}"
-        )
-
-        print(
-            f"    Historical Motion vs Current Ridge: "
-            f"{improvement:+.2f}%"
-        )
+        print(f"  {horizon} frames:")
+        print(f"    current_ridge: ADE={ridge_ade:.2f}px")
+        print(f"    historical_motion: ADE={history_ade:.2f}px")
+        print(f"    improvement: {improvement:.2f}%")
 
     write_results(
 
